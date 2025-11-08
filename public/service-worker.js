@@ -2,7 +2,7 @@ const CACHE_NAME = 'healthtrack-cache-v1';
 const OFFLINE_URL = '/offline.html';
 
 // Resources to pre-cache. Add any additional static files you want cached at install.
-// Workbox injectManifest will replace `self.__WB_MANIFEST` with an array of {url, revision} entries
+// Workbox injectManifest will replace the placeholder with an array of {url, revision} entries
 const PRECACHE_URLS = self.__WB_MANIFEST || [
   '/',
   '/index.html',
