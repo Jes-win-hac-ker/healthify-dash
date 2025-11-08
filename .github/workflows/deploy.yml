@@ -40,7 +40,7 @@ jobs:
         run: npm run build
 
       - name: Inject precache manifest
-        run: npx workbox-build injectManifest workbox-config.js
+        run: node build-sw.js
 
       - name: Upload build artifact
         # use the latest pages artifact action to avoid deprecated upload-artifact v3
