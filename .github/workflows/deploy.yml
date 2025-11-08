@@ -39,6 +39,12 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     name: Deploy to GitHub Pages
+    # target the built-in github-pages environment so deployments are scoped and visible
+    environment: github-pages
+    # ensure the job has permissions to create pages and request an id token for authentication
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
