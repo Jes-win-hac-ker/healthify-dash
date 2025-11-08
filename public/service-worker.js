@@ -45,14 +45,23 @@ self.addEventListener('fetch', (event) => {
   // Only handle navigation requests (HTML pages)
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          // If we got a response, put a copy in the cache
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+      (async () => {
+        try {
+          const response = await fetch(event.request);
+          // Only cache successful responses (response.ok is true and not 4xx/5xx)
+          if (response && response.ok) {
+            const copy = response.clone();
+            const cache = await caches.open(CACHE_NAME);
+            // Await cache.put to avoid race conditions where the response is returned
+            // before the cache operation completes.
+            await cache.put(event.request, copy);
+          }
           return response;
-        })
-        .catch(() => caches.match(event.request).then((cached) => cached || caches.match(OFFLINE_URL)))
+        } catch (err) {
+          const cached = await caches.match(event.request);
+          return cached || (await caches.match(OFFLINE_URL));
+        }
+      })()
     );
     return;
   }
