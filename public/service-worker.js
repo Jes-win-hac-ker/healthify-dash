@@ -2,12 +2,19 @@ const CACHE_NAME = 'healthtrack-cache-v1';
 const OFFLINE_URL = '/offline.html';
 
 // Resources to pre-cache. Add any additional static files you want cached at install.
-const PRECACHE_URLS = [
-  '/',
-  '/index.html',
-  OFFLINE_URL,
-  '/src/main.tsx',
-];
+// Prefer a build-time injected precache manifest (Workbox injectManifest will replace
+// `self.__WB_MANIFEST` with an array of {url, revision} entries). When that's not
+// available (dev / manual usage), fall back to a small static list that exists in
+// the production `dist/` output.
+const PRECACHE_URLS = (self.__WB_MANIFEST && Array.isArray(self.__WB_MANIFEST)
+  ? self.__WB_MANIFEST.map((entry) => entry.url || entry)
+  : [
+      '/',
+      '/index.html',
+      OFFLINE_URL,
+      '/icons/icon-192.svg',
+      '/icons/icon-512.svg',
+    ]);
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
