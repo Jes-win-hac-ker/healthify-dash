@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   swSrc: 'public/service-worker.js',
   swDest: 'dist/service-worker.js',
   globDirectory: 'dist',

@@ -1,5 +1,5 @@
-const { injectManifest } = require('workbox-build');
-const workboxConfig = require('./workbox-config.js');
+import { injectManifest } from 'workbox-build';
+import workboxConfig from './workbox-config.js';
 
 async function build() {
   try {
