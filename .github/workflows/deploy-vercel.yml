@@ -1,10 +1,11 @@
 name: Deploy to Vercel
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  # Disabled until Vercel secrets are configured
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:  # Manual trigger only
 
 jobs:
   deploy-vercel:
