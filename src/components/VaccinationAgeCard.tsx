@@ -1,9 +1,15 @@
 import { Shield, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
+import { useNavigate } from "react-router-dom";
 
 const VaccinationAgeCard = () => {
+  const navigate = useNavigate();
+
   return (
-    <Card className="shadow-md hover:shadow-lg transition-shadow duration-200 mb-6">
+    <Card 
+      className="shadow-md hover:shadow-lg transition-shadow duration-200 mb-6 cursor-pointer"
+      onClick={() => navigate("/vaccines/schedule")}
+    >
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">

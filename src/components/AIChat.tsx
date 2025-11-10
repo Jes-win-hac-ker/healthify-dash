@@ -33,6 +33,22 @@ const AIChat = ({ isOpen, onClose }: AIChatProps) => {
     }
   }, [messages]);
 
+  const fetchWithRetry = async (
+    url: string,
+    options: RequestInit,
+    retries = 1,
+    delayMs = 1200
+  ): Promise<Response> => {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      const res = await fetch(url, options);
+      if (res.status !== 429 || attempt === retries) return res;
+      // Backoff then retry
+      await new Promise((r) => setTimeout(r, delayMs));
+    }
+    // Should never reach here
+    return new Response(null, { status: 500 });
+  };
+
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -42,26 +58,45 @@ const AIChat = ({ isOpen, onClose }: AIChatProps) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
+      const response = await fetchWithRetry(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/health-ai-chat`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            // Authorization header removed (function does not require JWT)
           },
           body: JSON.stringify({ messages: [...messages, userMessage] }),
-        }
+        },
+        1
       );
 
       if (!response.ok) {
+        let details = "";
+        let source = "";
+        let rateHeaders: Record<string,string|undefined> = {};
+        try {
+          const json = await response.json();
+          details = json?.details || json?.error || "";
+          source = json?.source || "";
+          rateHeaders = json?.rateHeaders || {};
+          console.warn("AI function error response", { status: response.status, source, details, rateHeaders });
+        } catch (e) {
+          console.warn("Failed to parse error JSON", e);
+        }
         if (response.status === 429) {
-          throw new Error("Rate limit exceeded. Please try again later.");
+          const msg = source === "gemini"
+            ? `Gemini rate limit. Remaining: ${rateHeaders["x-ratelimit-remaining"] ?? "?"}. Reset: ${rateHeaders["x-ratelimit-reset"] ?? "?"}`
+            : "Supabase rate limit. Try again shortly.";
+          throw new Error(msg + (details ? ` (${details.substring(0,180)})` : ""));
         }
         if (response.status === 402) {
-          throw new Error("Please add credits to continue using AI features.");
+          throw new Error("API quota/credentials issue. Please check your AI key.");
         }
-        throw new Error("Failed to get response");
+        if (response.status === 403) {
+          throw new Error("Forbidden. Check function JWT verification setting or use anon key in Authorization header.");
+        }
+        throw new Error(details || "Failed to get response");
       }
 
       const reader = response.body?.getReader();
@@ -132,7 +167,7 @@ const AIChat = ({ isOpen, onClose }: AIChatProps) => {
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">AI Health Assistant</h2>
-              <p className="text-xs text-white/80">Powered by Lovable AI</p>
+              <p className="text-xs text-white/80">Powered by Gemini AI</p>
             </div>
           </div>
           <Button

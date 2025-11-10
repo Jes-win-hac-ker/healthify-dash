@@ -6,10 +6,12 @@ import BottomNavigation from "@/components/BottomNavigation";
 import ProfileHeader from "@/components/ProfileHeader";
 import DailyCard from "@/components/DailyCard";
 import VaccinationAgeCard from "@/components/VaccinationAgeCard";
+import HealthRecordsCard from "@/components/HealthRecordsCard";
 import EventCard from "@/components/EventCard";
 import AICard from "@/components/AICard";
 import AIChat from "@/components/AIChat";
 import { Loader2 } from "lucide-react";
+// Removed temporary Register button; navigation is provided via DailyCard
 
 interface Profile {
   full_name: string;
@@ -95,6 +97,7 @@ const Index = () => {
         
         <DailyCard />
         <VaccinationAgeCard />
+        <HealthRecordsCard />
         
         <div className="mb-6">
           <h2 className="text-xl font-bold text-foreground mb-4">Your Plan</h2>
@@ -102,6 +105,7 @@ const Index = () => {
             {events.map((event) => (
               <EventCard
                 key={event.id}
+                eventId={event.id}
                 title={event.title}
                 description={event.description}
                 eventDate={event.event_date}

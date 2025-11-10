@@ -1,8 +1,10 @@
 import { Calendar, Shield } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 const DailyCard = () => {
+  const navigate = useNavigate();
   return (
     <Card className="bg-gradient-to-br from-health-purple to-primary border-0 shadow-xl mb-6 overflow-hidden">
       <CardContent className="p-6 relative">
@@ -16,6 +18,7 @@ const DailyCard = () => {
         <Button
           variant="secondary"
           className="w-full bg-white hover:bg-white/90 text-primary font-semibold shadow-lg"
+          onClick={() => navigate("/vaccines/register")}
         >
           <Shield className="w-5 h-5 mr-2" />
           Vaccination Registration

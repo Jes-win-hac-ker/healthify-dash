@@ -1,8 +1,10 @@
 import { Calendar, MapPin, User, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 interface EventCardProps {
+  eventId?: string;
   title: string;
   description?: string;
   eventDate?: string;
@@ -12,6 +14,7 @@ interface EventCardProps {
 }
 
 const EventCard = ({
+  eventId,
   title,
   description,
   eventDate,
@@ -19,6 +22,8 @@ const EventCard = ({
   trainerName,
   colorTheme,
 }: EventCardProps) => {
+  const navigate = useNavigate();
+
   const colorClasses = {
     yellow: "bg-health-yellowLight border-health-yellow/20",
     blue: "bg-health-blueLight border-health-blue/20",
@@ -35,7 +40,8 @@ const EventCard = ({
 
   return (
     <Card
-      className={`${colorClasses[colorTheme]} border shadow-md hover:shadow-lg transition-all duration-200`}
+      onClick={() => navigate(eventId ? `/events/${eventId}` : "/events")}
+      className={`${colorClasses[colorTheme]} border shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer`}
     >
       <CardContent className="p-5">
         <div className="flex items-start justify-between mb-3">
