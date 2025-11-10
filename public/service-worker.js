@@ -1,4 +1,4 @@
-const CACHE_NAME = 'healthtrack-cache-v1';
+const CACHE_NAME = 'life-loop-cache-v1';
 const OFFLINE_URL = '/offline.html';
 
 // Resources to pre-cache. Add any additional static files you want cached at install.

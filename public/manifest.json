@@ -1,6 +1,6 @@
 {
-  "name": "HealthTrack",
-  "short_name": "HealthTrack",
+  "name": "Life Loop",
+  "short_name": "Life Loop",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

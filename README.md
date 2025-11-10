@@ -1,4 +1,6 @@
-# Welcome to your Lovable project
+# Life Loop - Your Personal Health Companion
+
+A modern PWA for tracking vaccinations, health events, and getting personalized AI health advice. Your complete wellness journey in one beautiful app.
 
 ## Project info
 
